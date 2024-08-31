@@ -1,10 +1,42 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function SignUp() {
+  const [form, setForm] = useState({});
+  const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const handleChange = (e) => {
+    setForm({
+      ...form,
+      [e.target.id]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      setLoading(true);
+      setError(false)
+      const response = await axios.post("/api/auth/signup", form); 
+      setLoading(false);
+      if (response.sussess === false) {
+        setError(true);
+      }
+      navigate("/signin");
+    } catch (error) {
+      setError(true);
+      setLoading(false);
+      console.log(error);
+    }
+
+  };
+
   return (
     <>
       <div className="mx-auto max-w-screen-xl px-4 pt-20 pb-auto  sm:px-6 lg:px-8 animate-fade-in">
-        <div className="mx-auto max-w-lg bg-gray-900 rounded-xl py-5">
+        <div className="mx-auto max-w-lg bg-gray-900 rounded-xl py-10">
           <h1 className="text-center text-3xl font-semibold text-white sm:text-3xl">
             Get started today
           </h1>
@@ -14,12 +46,10 @@ export default function SignUp() {
           </p>
 
           <form
-            action="#"
             className="mb-0 mt-3 space-y-4 rounded-lg p-8 sm:p-8 lg:p-8 text-slate-300"
+            onSubmit={handleSubmit}
           >
-            <p className="text-center text-xl font-medium">
-              Sign up 
-            </p>
+            <p className="text-center text-xl font-medium">Sign up</p>
             <div className="flex space-x-4">
               <div className="w-1/2">
                 <label htmlFor="firstName" className="sr-only">
@@ -27,9 +57,11 @@ export default function SignUp() {
                 </label>
                 <div className="relative">
                   <input
+                    id="firstName"
                     type="text"
                     className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm text-black font-semibold hover:opacity-90"
                     placeholder="First name"
+                    onChange={handleChange}
                   />
                 </div>
               </div>
@@ -39,9 +71,11 @@ export default function SignUp() {
                 </label>
                 <div className="relative">
                   <input
+                    id="lastName"
                     type="text"
                     className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm text-black font-semibold hover:opacity-90"
                     placeholder="Last name"
+                    onChange={handleChange}
                   />
                 </div>
               </div>
@@ -52,9 +86,11 @@ export default function SignUp() {
               </label>
               <div className="relative">
                 <input
+                  id="email"
                   type="email"
                   className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm text-black font-semibold hover:opacity-90"
                   placeholder="Enter email"
+                  onChange={handleChange}
                 />
 
                 <span className="absolute inset-y-0 end-0 grid place-content-center px-4">
@@ -84,8 +120,10 @@ export default function SignUp() {
               <div className="relative">
                 <input
                   type="password"
+                  id="password"
                   className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm text-black font-semibold hover:opacity-90"
                   placeholder="Enter password"
+                  onChange={handleChange}
                 />
 
                 <span className="absolute inset-y-0 end-0 grid place-content-center px-4">
@@ -114,14 +152,16 @@ export default function SignUp() {
             </div>
             <div>
               <label htmlFor="password" className="sr-only">
-                Password
+                RePassword
               </label>
 
               <div className="relative">
                 <input
+                  id="RePassword"
                   type="password"
                   className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm text-black font-semibold hover:opacity-90"
-                  placeholder="Enter password again"
+                  placeholder="ReEnter password again"
+                  onChange={handleChange}
                 />
 
                 <span className="absolute inset-y-0 end-0 grid place-content-center px-4">
@@ -148,11 +188,11 @@ export default function SignUp() {
                 </span>
               </div>
             </div>
-            <button
+            <button disabled={loading}
               type="submit"
-              className="block w-full rounded-lg bg-[#00AF54] px-5 py-3 text-sm font-medium text-white hover:opacity-80"
+              className="block w-full rounded-lg bg-[#00AF54] px-5 py-3 text-sm font-medium text-white hover:opacity-80 uppercase"
             >
-              Sign up
+              {loading ? "Loading..." : "Sign up"}
             </button>
 
             <p className="text-center text-sm text-gray-500">
@@ -161,6 +201,7 @@ export default function SignUp() {
                 Sign in
               </Link>
             </p>
+            <p className="text-center text-sm text-red-500">{error && "something went wrong"}</p>
           </form>
         </div>
       </div>

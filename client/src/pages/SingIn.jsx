@@ -1,5 +1,34 @@
-import { Link } from "react-router-dom";
+import axios from "axios";
+import { useState } from "react";
+import { Link , useNavigate } from "react-router-dom";
 export default function SingIn() {
+  const [form, setForm] = useState({});
+  const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const handleChange = (e) => {
+    setForm({
+      ...form,
+      [e.target.id]: e.target.value,
+    });
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      setLoading(true);
+      setError(false);
+      const response = await axios.post("/api/auth/signin", form);
+      setLoading(false);
+      if (response.sussess === false) {
+        setError(true);
+      }
+      navigate("/");
+    } catch(error) {
+      setError(true);
+      setLoading(false);
+      console.log(error);
+    }
+  }
   return (
     <>
       <div className="mx-auto max-w-screen-xl px-4 pt-20 pb-auto  sm:px-6 lg:px-8 animate-fade-in">
@@ -9,7 +38,8 @@ export default function SingIn() {
           </h1>
           <form
             action="#"
-            className="mb-0 mt-3 space-y-4 rounded-lg p-8 sm:p-8 lg:p-8 text-slate-300"
+            className="mb-0 mt-3 space-y-4 rounded-lg p-8 sm:p-8 lg:p-8 text-slate-300" 
+            onSubmit={handleSubmit}
           >
             <p className="text-center text-xl font-medium">
               Sign in to your account
@@ -23,8 +53,10 @@ export default function SingIn() {
               <div className="relative">
                 <input
                   type="email"
+                  id="email"
                   className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm text hover:opacity-90"
                   placeholder="Enter email"
+                  onChange={handleChange}
                 />
 
                 <span className="absolute inset-y-0 end-0 grid place-content-center px-4">
@@ -54,8 +86,10 @@ export default function SingIn() {
               <div className="relative">
                 <input
                   type="password"
+                  id="password"
                   className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm hover:opacity-90"
                   placeholder="Enter password"
+                  onChange={handleChange}
                 />
 
                 <span className="absolute inset-y-0 end-0 grid place-content-center px-4">
@@ -85,18 +119,19 @@ export default function SingIn() {
 
             <button
               type="submit"
-              className="block w-full rounded-lg bg-[#5386e4] px-5 py-3 text-sm font-medium text-white hover:opacity-80"
+              className="block w-full rounded-lg bg-[#5386e4] px-5 py-3 text-sm font-medium text-white hover:opacity-80 uppercase"
             >
-              Sign in
+              {loading ? "Loading..." : "Sign In"}
             </button>
 
-            <p className="text-center text-sm text-gray-500">
+            <p className="text-center text-sm text-gray-500 ">
               No account?
               <Link className=" text-[#00AF54] hover:opacity-70" to="/signup">
                 Sign up
               </Link>
             </p>
           </form>
+          <p className="text-center text-sm text-red-500">{error && "something went wrong"}</p>
         </div>
       </div>
     </>
