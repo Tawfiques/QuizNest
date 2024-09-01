@@ -1,11 +1,15 @@
 import axios from "axios";
 import { useState } from "react";
 import { Link , useNavigate } from "react-router-dom";
+import {signStart, signSuccess, signFailure} from "../redux/user/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+
+
 export default function SingIn() {
   const [form, setForm] = useState({});
-  const [error, setError] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const {loading, error} =useSelector((state) => state.user)
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const handleChange = (e) => {
     setForm({
       ...form,
@@ -15,25 +19,22 @@ export default function SingIn() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      setLoading(true);
-      setError(false);
+      dispatch(signStart());
       const response = await axios.post("/api/auth/signin", form);
-      setLoading(false);
       if (response.sussess === false) {
-        setError(true);
+        dispatch(signFailure(response));
       }
-      navigate("/");
+      dispatch(signSuccess(response));
+      navigate("/dashboard");
     } catch(error) {
-      setError(true);
-      setLoading(false);
-      console.log(error);
+      dispatch(signFailure(error));
     }
   }
   return (
     <>
       <div className="mx-auto max-w-screen-xl px-4 pt-20 pb-auto  sm:px-6 lg:px-8 animate-fade-in">
         <div className="mx-auto max-w-lg bg-gray-900 rounded-xl py-5">
-          <h1 className="text-center text-3xl font-bold text-white sm:text-5xl">
+          <h1 className="text-center text-3xl font-bold text-white sm:text-5xl uppercase">
             Sign In
           </h1>
           <form
@@ -54,7 +55,7 @@ export default function SingIn() {
                 <input
                   type="email"
                   id="email"
-                  className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm text hover:opacity-90"
+                  className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm text-black font-semibold shadow-sm text hover:opacity-90"
                   placeholder="Enter email"
                   onChange={handleChange}
                 />
@@ -87,7 +88,7 @@ export default function SingIn() {
                 <input
                   type="password"
                   id="password"
-                  className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm hover:opacity-90"
+                  className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm text-black font-semibold shadow-sm hover:opacity-90"
                   placeholder="Enter password"
                   onChange={handleChange}
                 />
@@ -131,7 +132,7 @@ export default function SingIn() {
               </Link>
             </p>
           </form>
-          <p className="text-center text-sm text-red-500">{error && "something went wrong"}</p>
+          <p className="text-center text-sm text-red-500"> {error ? error.response.data.message || 'Something went wrong!' : ''}</p>
         </div>
       </div>
     </>

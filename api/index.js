@@ -5,6 +5,7 @@ import path from "path"
 import 'dotenv/config'
 import userRoute from "./routes/user.route.js"
 import authRoute from "./routes/auth.route.js"
+import cookieParser from 'cookie-parser';
 
 const __dirname = path.resolve();
 
@@ -12,6 +13,7 @@ const app = express()
 const port = 3000
 
 app.use(morgan("dev"))
+app.use(cookieParser());
 app.use(express.json());
 
 async function main() {

@@ -1,7 +1,23 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { signOut } from "../redux/user/userSlice";
+import axios from "axios";
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { currentUser } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const handleSignOut = async () => {
+    try {
+      await axios.get("/api/auth/signout");
+      dispatch(signOut());
+      setIsMenuOpen(false);
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div className="bg-gray-900 animate-fade-in">
       <div className="px-4 py-1 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8">
@@ -11,25 +27,46 @@ export default function Header() {
           </Link>
           <ul className="flex items-center hidden space-x-8 lg:flex">
             <li>
-              <Link to="/features"
+              <Link
+                to="/features"
                 className="font-medium tracking-wide text-gray-100 hover:opacity-80"
               >
                 Features
               </Link>
             </li>
             <li>
-              <Link to="/about"
+              <Link
+                to="/about"
                 className="font-medium tracking-wide text-gray-100 hover:opacity-80"
               >
                 About us
               </Link>
             </li>
             <li>
-              <Link to="/signin"
-                className="inline-flex items-center justify-center h-12 px-6 font-medium tracking-wide text-white "
+              <Link
+                to="/dashboard"
+                className="font-medium tracking-wide text-gray-100 hover:opacity-80"
               >
-                Sign In
+                Dashboard
               </Link>
+            </li>
+            <li>
+              {currentUser ? (
+                <button
+                  className="font-medium tracking-wide text-gray-100 hover:opacity-80"
+                  onClick={handleSignOut}
+                >
+                  Sign Out
+                </button>
+              ) : (
+                <Link
+                  to="/SignIn"
+                  className="font-medium tracking-wide text-gray-100 hover:opacity-80"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Sign In
+                </Link>
+              )}
             </li>
           </ul>
           <div className="lg:hidden">
@@ -75,32 +112,56 @@ export default function Header() {
                       <li>
                         <Link
                           to="/"
-                          className="font-bold tracking-wide text-gray-700 transition-colors duration-200 hover:opacity-80" onClick={() => setIsMenuOpen(false)}
+                          className="font-bold tracking-wide text-gray-700 transition-colors duration-200 hover:opacity-80"
+                          onClick={() => setIsMenuOpen(false)}
                         >
                           QUIZ<span className="text-[#5386e4]">NEST</span>
                         </Link>
                       </li>
                       <li>
-                        <Link to="/features"
-                          className="font-medium tracking-wide text-gray-700 transition-colors duration-200 hover:opacity-80" onClick={() => setIsMenuOpen(false)}
+                        <Link
+                          to="/features"
+                          className="font-medium tracking-wide text-gray-700 transition-colors duration-200 hover:opacity-80"
+                          onClick={() => setIsMenuOpen(false)}
                         >
                           Features
                         </Link>
                       </li>
 
                       <li>
-                        <Link to="/about"
-                          className="font-medium tracking-wide text-gray-700 transition-colors duration-200 hover:opacity-80" onClick={() => setIsMenuOpen(false)}
+                        <Link
+                          to="/about"
+                          className="font-medium tracking-wide text-gray-700 transition-colors duration-200 hover:opacity-80"
+                          onClick={() => setIsMenuOpen(false)}
                         >
                           About us
                         </Link>
                       </li>
                       <li>
-                        <Link to="/SignIn"
-                          className="font-medium tracking-wide text-gray-700 transition-colors duration-200 hover:opacity-80" onClick={() => setIsMenuOpen(false)}
+                        <Link
+                          to="/dashboard"
+                          className="font-medium tracking-wide text-gray-700 transition-colors duration-200 hover:opacity-80"
                         >
-                          Sign In
+                          Dashboard
                         </Link>
+                      </li>
+                      <li>
+                        {currentUser ? (
+                          <button
+                            className="font-medium tracking-wide text-gray-700 transition-colors duration-200 hover:opacity-80"
+                            onClick={handleSignOut}
+                          >
+                            Sign Out
+                          </button>
+                        ) : (
+                          <Link
+                            to="/SignIn"
+                            className="font-medium tracking-wide text-gray-700 transition-colors duration-200 hover:opacity-80"
+                            onClick={() => setIsMenuOpen(false)}
+                          >
+                            Sign In
+                          </Link>
+                        )}
                       </li>
                     </ul>
                   </nav>

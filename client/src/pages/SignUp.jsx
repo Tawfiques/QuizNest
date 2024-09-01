@@ -49,7 +49,7 @@ export default function SignUp() {
             className="mb-0 mt-3 space-y-4 rounded-lg p-8 sm:p-8 lg:p-8 text-slate-300"
             onSubmit={handleSubmit}
           >
-            <p className="text-center text-xl font-medium">Sign up</p>
+            <p className="text-center text-xl font-medium uppercase">Sign up</p>
             <div className="flex space-x-4">
               <div className="w-1/2">
                 <label htmlFor="firstName" className="sr-only">
@@ -160,7 +160,7 @@ export default function SignUp() {
                   id="RePassword"
                   type="password"
                   className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm text-black font-semibold hover:opacity-90"
-                  placeholder="ReEnter password again"
+                  placeholder="Re-enter password"
                   onChange={handleChange}
                 />
 
