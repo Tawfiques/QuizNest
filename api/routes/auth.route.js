@@ -8,11 +8,12 @@ const route = express.Router();
 
 route.post("/signup", async (req, res, next) => {
     const { firstName, lastName, email, password, RePassword } = req.body;
-    if (firstName === undefined || lastName === undefined || email === undefined || password === undefined) return next(errorHandler(400, "Please fill in all fields"))
+    if (!firstName || !lastName || !email || !password) return next(errorHandler(400, "Please fill in all fields"))
+    if (typeof firstName !== 'string' || typeof lastName !== 'string' || typeof email !== 'string' || typeof password !== 'string') return next(errorHandler(400, "All fields must be strings"))
+    if (!/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/.test(email)) return next(errorHandler(400, "Invalid email address"))
     if (password !== RePassword) return next(errorHandler(400, "Passwords do not match"))
     const hashPassword = await bcryptjs.hashSync(password, 10);
-    console.log(firstName, lastName, email, password, RePassword);
-    const newUser = new User({ name: `${firstName} ${lastName}`, email, password: hashPassword });
+    const newUser = new User({ name: `${firstName} ${lastName}`, email: email.toLowerCase() , password: hashPassword });
     try {
         await newUser.save();
         return res.status(201).send({ message: "User created successfully" });
@@ -22,7 +23,9 @@ route.post("/signup", async (req, res, next) => {
 })
 route.post("/signin", async (req, res, next) => {
     const { email, password } = req.body;
-    console.log(email, password);
+    if (!email || !password) return next(errorHandler(400, "Please fill in all fields"))
+    if (typeof email !== 'string' || typeof password !== 'string') return next(errorHandler(400, "All fields must be strings"))
+    if (!/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/.test(email)) return next(errorHandler(400, "Invalid email address"))
     try {
         const user = await User.findOne({ email });
         if (!user) {
@@ -34,7 +37,7 @@ route.post("/signin", async (req, res, next) => {
         }
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
         const { password: p, ...others } = user._doc;
-        res.cookie("access_token", token, { httpOnly: true, sameSite: "none", secure: true, maxAge: 24 * 60 * 60 * 1000 }).status(200).json({ others });
+        res.cookie("access_token", token, { httpOnly: true, sameSite: "none", secure: true, maxAge: 7 * 24 * 60 * 60 * 1000 }).status(200).json({ others });
     }
     catch (error) {
         next(error);

@@ -1,7 +1,7 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link , useNavigate } from "react-router-dom";
-import {signStart, signSuccess, signFailure} from "../redux/user/userSlice";
+import {signStart, signSuccess, signFailure, clearError} from "../redux/user/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 
@@ -16,18 +16,22 @@ export default function SingIn() {
       [e.target.id]: e.target.value,
     });
   };
+  useEffect(() => {
+    dispatch(clearError());
+  }, []);
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       dispatch(signStart());
+      
       const response = await axios.post("/api/auth/signin", form);
-      if (response.sussess === false) {
-        dispatch(signFailure(response));
+      if (response.data.sussess === false) {
+        dispatch(signFailure(response.data));
       }
-      dispatch(signSuccess(response));
+      dispatch(signSuccess(response.data));
       navigate("/dashboard");
     } catch(error) {
-      dispatch(signFailure(error));
+      dispatch(signFailure(error.response.data));
     }
   }
   return (
@@ -132,7 +136,7 @@ export default function SingIn() {
               </Link>
             </p>
           </form>
-          <p className="text-center text-sm text-red-500"> {error ? error.response.data.message || 'Something went wrong!' : ''}</p>
+          <p className="text-center text-sm text-red-500">{error ? error.message || 'Something went wrong!' : ''}</p>
         </div>
       </div>
     </>

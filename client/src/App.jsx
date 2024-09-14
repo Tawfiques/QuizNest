@@ -7,24 +7,28 @@ import SignUp from "./pages/SignUp";
 import Header from "./componets/Header";
 import Dashboard from "./pages/Dashboard";
 import PrivateRoute from "./componets/PrivateRoute";
-
+import CreateQuiz from "./pages/CreateQuiz";
+import CreateQuestion from "./pages/CreateQuestion";
 
 function App() {
   return (
     <BrowserRouter>
-      <Header/>
+      <Header />
       <Routes>
         <Route path="/" element={<Home />}></Route>
         <Route path="/features" element={<Features />}></Route>
         <Route path="/about" element={<AboutUs />}></Route>
         <Route path="/signin" element={<SignIn />}></Route>
-        <Route element={<PrivateRoute />}>
-          <Route path="/dashboard" element={<Dashboard />}/>
-        </Route>
         <Route path="/signup" element={<SignUp />}></Route>
+        <Route path="/dashboard" element={<PrivateRoute />}>
+          <Route index element={<Dashboard />} />
+          <Route path="createquiz" element={<CreateQuiz />} />
+          <Route path="quiz/edit/:quizId" element={<CreateQuestion />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );
 }
 
 export default App;
+

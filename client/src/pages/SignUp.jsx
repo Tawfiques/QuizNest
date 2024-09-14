@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -7,6 +7,9 @@ export default function SignUp() {
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  useEffect(() => {
+    setError(false); // Reset error state when component mounts
+  }, []);
   const handleChange = (e) => {
     setForm({
       ...form,
@@ -21,16 +24,16 @@ export default function SignUp() {
       setError(false)
       const response = await axios.post("/api/auth/signup", form); 
       setLoading(false);
-      if (response.sussess === false) {
-        setError(true);
+      if (response.data.success === false) {
+        setError(response.data.message);
+        
+      } else {
+        navigate("/signin");
       }
-      navigate("/signin");
     } catch (error) {
-      setError(true);
-      setLoading(false);
-      console.log(error);
+      setError(error.response.data.message);
+      setLoading(false);      
     }
-
   };
 
   return (
@@ -201,7 +204,7 @@ export default function SignUp() {
                 Sign in
               </Link>
             </p>
-            <p className="text-center text-sm text-red-500">{error && "something went wrong"}</p>
+            <p className="text-center text-sm text-red-500">{error ? error.message || 'Something went wrong!' : ''}</p>
           </form>
         </div>
       </div>
