@@ -29,26 +29,18 @@ export default function Header() {
   return (
     <>
       <div className="bg-gray-900 animate-fade-in">
-        <div className="px-4 py-1 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8">
+        <div className="px-4  mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 h-[5vh]">
           <div className="relative flex items-center justify-between">
             <Link to="/">
-              <img src={logo} alt="" />
+              <img className="object-contain" src={logo} alt="" />
             </Link>
-            <ul className="flex items-center hidden space-x-8 lg:flex">
+            <ul className="flex  hidden space-x-8 lg:flex">
               <li>
                 <Link
                   to="/features"
                   className="font-medium tracking-wide text-gray-100 hover:opacity-80"
                 >
                   Features
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/about"
-                  className="font-medium tracking-wide text-gray-100 hover:opacity-80"
-                >
-                  About us
                 </Link>
               </li>
               <li>
@@ -142,16 +134,6 @@ export default function Header() {
                             Features
                           </Link>
                         </li>
-
-                        <li>
-                          <Link
-                            to="/about"
-                            className="font-medium tracking-wide text-gray-700 transition-colors duration-200 hover:opacity-80"
-                            onClick={() => setIsMenuOpen(false)}
-                          >
-                            About us
-                          </Link>
-                        </li>
                         <li>
                           <Link
                             to="/dashboard"
@@ -186,7 +168,7 @@ export default function Header() {
           </div>
         </div>
       </div>
-      {currentUser && location.pathname.startsWith("/dashboard") && <SideBar isOpen={isOpen} toggleSidebar={toggleSidebar} />}
+      {currentUser && location.pathname === "/dashboard" && <SideBar isOpen={isOpen} toggleSidebar={toggleSidebar} />}
     </>
   );
 }

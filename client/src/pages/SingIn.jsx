@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Link , useNavigate } from "react-router-dom";
 import {signStart, signSuccess, signFailure, clearError} from "../redux/user/userSlice";
 import { useDispatch, useSelector } from "react-redux";
+import Footer from "../componets/Footer";
 
 
 export default function SingIn() {
@@ -139,6 +140,7 @@ export default function SingIn() {
           <p className="text-center text-sm text-red-500">{error ? error.message || 'Something went wrong!' : ''}</p>
         </div>
       </div>
+      <Footer/>
     </>
   );
 }

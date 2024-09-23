@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import Footer from "../componets/Footer";
 
 export default function SignUp() {
   const [form, setForm] = useState({});
@@ -38,7 +39,7 @@ export default function SignUp() {
 
   return (
     <>
-      <div className="mx-auto max-w-screen-xl px-4 pt-20 pb-auto  sm:px-6 lg:px-8 animate-fade-in">
+      <div className="mx-auto max-w-screen-xl px-4 pt-16 pb-auto sm:px-6 lg:px-8 animate-fade-in">
         <div className="mx-auto max-w-lg bg-gray-900 rounded-xl py-10">
           <h1 className="text-center text-3xl font-semibold text-white sm:text-3xl">
             Get started today
@@ -208,6 +209,7 @@ export default function SignUp() {
           </form>
         </div>
       </div>
+      <Footer/>
     </>
   );
 }

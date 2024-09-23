@@ -65,7 +65,7 @@ function CreateQuestion() {
   if (loading) return <div className="sm:ml-64">Loading...</div>;
 
   return (
-    <div className="sm:ml-64 grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-1 p-4 ">
+    <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-1 p-4 ">
       <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full md:max-w-md mx-auto shadow-lg rounded-lg p-4">
         <h1 className="text-3xl text-center text-[#4C4B63] font-bold">Create Question for {quiz.title}</h1>
         <input
