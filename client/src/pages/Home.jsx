@@ -1,4 +1,5 @@
 import Footer from "../componets/Footer";
+import art from "../componets/assests/Art.png";
 
 export default function Home() {
   return (
@@ -20,7 +21,7 @@ export default function Home() {
           </div>
           <img
             className="object-content mx-auto rounded sm:h-64 md:h-80 lg:h-auto lg:w-5/6"
-            src="Art.png"
+            src={art}
             alt=""
           />
         </div>
